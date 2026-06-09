@@ -5,19 +5,19 @@ steps:
     [
       'build',
       '-t',
-      'us-central1-docker.pkg.dev/logging-demo-project-496803/sample_cicd/sample-app:$BUILD_ID',
+      'us-central1-docker.pkg.dev/logging-demo-project-496803/sample-cicd/sample-app:$BUILD_ID',
       '.'
     ]
 
-# Step 2: Push image to Artifact Registry
+# Step 2: Push image
 - name: 'gcr.io/cloud-builders/docker'
   args: 
     [
       'push',
-      'us-central1-docker.pkg.dev/logging-demo-project-496803/sample_cicd/sample-app:$BUILD_ID'
+      'us-central1-docker.pkg.dev/logging-demo-project-496803/sample-cicd/sample-app:$BUILD_ID'
     ]
 
-# Step 3: Create new Instance Template with container
+# Step 3: Create instance template
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
   args:
@@ -26,10 +26,10 @@ steps:
       gcloud compute instance-templates create-with-container sample-app-template-$BUILD_ID \
         --machine-type=e2-micro \
         --tags=sample-app \
-        --container-image=us-central1-docker.pkg.dev/logging-demo-project-496803/sample_cicd/sample-app:$BUILD_ID \
+        --container-image=us-central1-docker.pkg.dev/logging-demo-project-496803/sample-cicd/sample-app:$BUILD_ID \
         --boot-disk-size=10GB
 
-# Step 4: Rolling update to MIG (Zero downtime)
+# Step 4: Update MIG
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
     - 'compute'
@@ -42,7 +42,7 @@ steps:
     - '--zone=us-central1-a'
 
 images:
-- 'us-central1-docker.pkg.dev/logging-demo-project-496803/sample_cicd/sample-app:$BUILD_ID'
+- 'us-central1-docker.pkg.dev/logging-demo-project-496803/sample-cicd/sample-app:$BUILD_ID'
 
 options:
   logging: CLOUD_LOGGING_ONLY
