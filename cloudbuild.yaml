@@ -46,7 +46,3 @@ images:
 
 options:
   logging: CLOUD_LOGGING_ONLY
-``git add .
-git commit -m "CI/CD setup"
-git push origin main
-``
