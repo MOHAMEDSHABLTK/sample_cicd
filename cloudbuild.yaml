@@ -1,61 +1,52 @@
 steps:
 # Step 1: Build Docker image
 - name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'build',
-    '-t',
-    'us-central1-docker.pkg.dev/handson-493511/todo-repo/sample_cicd:$BUILD_ID',
-    '.'
-  ]
+  args: 
+    [
+      'build',
+      '-t',
+      'us-central1-docker.pkg.dev/logging-demo-project-496803/sample_cicd/sample-app:$BUILD_ID',
+      '.'
+    ]
 
-# Step 2: Push image
+# Step 2: Push image to Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: [
-    'push',
-    'us-central1-docker.pkg.dev/handson-493511/todo-repo/sample_cicd:$BUILD_ID'
-  ]
+  args: 
+    [
+      'push',
+      'us-central1-docker.pkg.dev/logging-demo-project-496803/sample_cicd/sample-app:$BUILD_ID'
+    ]
 
-# Step 3: Create Instance Template
+# Step 3: Create new Instance Template with container
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
   args:
-  - '-c'
-  - |
-    gcloud compute instance-templates create-with-container sample-cicd-template-$BUILD_ID \
-      --machine-type=e2-micro \
-      --tags=sample-cicd-node \
-      --container-image=us-central1-docker.pkg.dev/handson-493511/todo-repo/sample_cicd:$BUILD_ID \
-      --boot-disk-size=10GB
+    - '-c'
+    - |
+      gcloud compute instance-templates create-with-container sample-app-template-$BUILD_ID \
+        --machine-type=e2-micro \
+        --tags=sample-app \
+        --container-image=us-central1-docker.pkg.dev/logging-demo-project-496803/sample_cicd/sample-app:$BUILD_ID \
+        --boot-disk-size=10GB
 
-# Step 4: Rolling Update (Zero-Downtime)
+# Step 4: Rolling update to MIG (Zero downtime)
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
-  - 'compute'
-  - 'instance-groups'
-  - 'managed'
-  - 'rolling-action'
-  - 'start-update'
-  - 'sample-cicd-mig'
-  - '--version=template=sample-cicd-template-$BUILD_ID'
-  - '--zone=us-central1-a'
-  - '--type=proactive'
-  - '--max-unavailable=0'
-  - '--max-surge=1'
-
-# Step 5: Cleanup old templates (optional)
-- name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    gcloud compute instance-templates list \
-    --filter="name~'sample-cicd-template-'" \
-    --sort-by=~creationTimestamp \
-    --format="value(name)" | tail -n +6 | \
-    xargs -r gcloud compute instance-templates delete -q
+    - 'compute'
+    - 'instance-groups'
+    - 'managed'
+    - 'rolling-action'
+    - 'start-update'
+    - 'sample-app-mig'
+    - '--version=template=sample-app-template-$BUILD_ID'
+    - '--zone=us-central1-a'
 
 images:
-- 'us-central1-docker.pkg.dev/handson-493511/todo-repo/sample_cicd:$BUILD_ID'
+- 'us-central1-docker.pkg.dev/logging-demo-project-496803/sample_cicd/sample-app:$BUILD_ID'
 
 options:
   logging: CLOUD_LOGGING_ONLY
+``git add .
+git commit -m "CI/CD setup"
+git push origin main
+``
