@@ -1,12 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Simple Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CI/CD App</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        .name {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        .tag {
+            margin-top: 20px;
+            font-size: 1em;
+            opacity: 0.8;
+        }
+
+        .button {
+            margin-top: 25px;
+            padding: 12px 25px;
+            background: #ffcc00;
+            color: black;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .button:hover {
+            background: white;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Hello World</h1>
-    <p>This is my first HTML page.......By shabilllllllllll</p>
+    <div class="container">
+        <h1>🚀 Hello World</h1>
+
+        <p>This page is deployed using <b>CI/CD Pipeline</b> on GCP</p>
+
+        <p>Created by <span class="name">Shabil T K</span></p>
+
+        <p class="tag">✅ Automated Build | ✅ Zero Downtime | ✅ Cloud Deployment</p>
+
+        <button class="button">Deployment Successful ✅</button>
+    </div>
 
 </body>
 </html>
